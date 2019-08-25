@@ -1,8 +1,15 @@
-package com.wapitia.worddivision.model.builder
+package worddivision.model.builder
 
-import com.wapitia.worddivision.model.*
-import com.wapitia.worddivision.model.SubtractionStep
-import com.wapitia.worddivision.model.Tableau
+import worddivision.model.Letter
+import worddivision.model.Digit
+import worddivision.model.Cell
+import worddivision.model.SubtractionStep
+import worddivision.model.Subcell
+import worddivision.model.Tableau
+import worddivision.model.Carry
+import worddivision.model.BlankCell
+import worddivision.standard.StandardTextUtility.BLANK
+import worddivision.standard.StandardTextUtility.spaces
 
 open class MutableLetter(val char: Char): Letter {
     var solution: Digit? = null
@@ -13,6 +20,33 @@ open class MutableLetter(val char: Char): Letter {
 object Blank : MutableLetter(BLANK) {
     override fun solution() = 0
 }
+
+internal class LetterCellAccum(val letterMap: MutableMap<Char,Letter> = HashMap<Char,Letter>(),
+                      val cellMap: MutableMap<Letter,Cell> = HashMap<Letter,Cell>() )
+{
+    fun letters(): Array<Letter> = cellMap.keys.toTypedArray().apply { sortBy { ltr -> ltr.char() } }
+
+    fun fetchLetter(c: Char): Letter = letterMap.get(c).run {
+        if (this == null) {
+            val res = MutableLetter(c)
+            letterMap.put(c, res)
+            res
+        }
+        else this
+    }
+
+    fun fetchCell(letter: Letter): Cell = cellMap.get(letter).run {
+        if (this == null) {
+            val res = Cell.letterCell(letter)
+            cellMap.put(letter, res)
+            res
+        }
+        else this
+    }
+
+    fun fetchCellFromChar(c: Char): Cell = fetchCell(fetchLetter(c))
+}
+
 
 /**
  * Build a valid immutable Tableau.
@@ -25,12 +59,12 @@ object Blank : MutableLetter(BLANK) {
         val subtractionSteps: Array<SubtractionStep>)
  */
 class TextTableauBuilder(
-    var width: Int? = null,
+//    var width: Int? = null,
     var quotient: String? = null,
     var divisor: String? = null,
     val rows: MutableList<String> = ArrayList()
 ) {
-    fun width(width: Int) = apply { this.width = width }
+//    fun width(width: Int) = apply { this.width = width }
     fun quotient(quotient: String) = apply { this.quotient = quotient }
     fun divisor(divisor: String) = apply { this.divisor = divisor }
     fun row(row: String) = apply {
@@ -38,32 +72,6 @@ class TextTableauBuilder(
     }
 
     fun build(): Tableau = validateAndBuild()
-
-    class LetterCellAccum(val letterMap: MutableMap<Char,Letter> = HashMap<Char,Letter>(),
-                          val cellMap: MutableMap<Letter,Cell> = HashMap<Letter,Cell>() )
-    {
-        fun letters(): Array<Letter> = cellMap.keys.toTypedArray().apply { sortBy { ltr -> ltr.char() } }
-
-        fun fetchLetter(c: Char): Letter = letterMap.get(c).run {
-            if (this == null) {
-                val res = MutableLetter(c)
-                letterMap.put(c, res)
-                res
-            }
-            else this
-        }
-
-        fun fetchCell(letter: Letter): Cell = cellMap.get(letter).run {
-            if (this == null) {
-                val res = Cell.letterCell(letter)
-                cellMap.put(letter, res)
-                res
-            }
-            else this
-        }
-
-        fun fetchCellFromChar(c: Char): Cell = fetchCell(fetchLetter(c))
-    }
 
     protected fun validateAndBuild(): Tableau {
 
@@ -79,7 +87,7 @@ class TextTableauBuilder(
         val divsr: Array<Cell> = cellArrayOf(
             divisor
                 ?: throw TableauBuildException(TableauBuildProblem.MissingDivisor, "Missing divisor"),
-            width, accum)
+            divisor?.length ?: 0, accum)
         val quotnt: Array<Cell> = cellArrayOf(
             quotient
                 ?: throw TableauBuildException(TableauBuildProblem.MissingQuotient, "Missing quotient"),
@@ -93,18 +101,16 @@ class TextTableauBuilder(
 
     fun rowHasSubStepAt(mindex: Int, list: List<Any>) = mindex + 2 < list.size
 
-    protected fun buildSubSteps(rows: List<String>, width: Int, accum: LetterCellAccum): Array<SubtractionStep> {
+    private fun buildSubSteps(rows: List<String>, width: Int, accum: LetterCellAccum): Array<SubtractionStep> {
 
         val MinuendIX = 0
         val SubtrahendIX = 1
         val DifferenceIX = 2
 
-        fun normalize(minuend: String): String {
-            if (minuend.length > width)
-                throw TableauBuildException(TableauBuildProblem.RowTooLong, "Row too long. ")
-            if (minuend.length < width)
-                return minuend + spaces(width - minuend.length)
-            return minuend
+        fun normalize(minuend: String): String = when {
+            minuend.length > width -> throw TableauBuildException(TableauBuildProblem.RowTooLong, "Row too long. ")
+            minuend.length < width -> minuend + spaces(width - minuend.length)
+            else                   -> minuend
         }
 
         if (! hasOddSize(rows))
@@ -132,34 +138,19 @@ class TextTableauBuilder(
         return result
     }
 
-    fun buildStep(minuend: Array<Cell>, subtrahend: Array<Cell>, difference: Array<Cell>): SubtractionStep {
+    private fun buildStep(minuend: Array<Cell>, subtrahend: Array<Cell>, difference: Array<Cell>): SubtractionStep {
         val width = minuend.size
-        val accum: MutableList<Subcell> = mutableListOf<Subcell>()
-        var leftCarry = Carry.lowered()
-        IntRange(0, width).forEach { i ->
+        val subcells: Array<Subcell> = (0 until width).map { i ->
             val mCell = minuend[i]
             val sCell = subtrahend[i]
             val dCell = difference[i]
-            val rightCarry = Carry.lowered()
-            val cell = Subcell(mCell, sCell, dCell, leftCarry, rightCarry)
-            accum.add(cell)
-        }
-        val subcells: Array<Subcell> = accum.toTypedArray()
+            val cell = Subcell(mCell, sCell, dCell, Carry.lowered(), Carry.lowered())
+            cell
+        }.toTypedArray()
         return SubtractionStep(subcells)
     }
 
-    companion object CommonTextUtils {
-
-        private var SPACES = "                "
-        private fun ensureSpaces(size: Int): String {
-            while (SPACES.length < size) SPACES += SPACES
-            return SPACES
-        }
-
-        fun spaces(size: Int) = ensureSpaces(size).substring(0, size)
-    }
-
-    protected fun cellArrayOf(str: String, width: Int, accum: LetterCellAccum)
+    private fun cellArrayOf(str: String, width: Int, accum: LetterCellAccum)
     : Array<Cell>
     {
         val blankPrefix = kotlin.math.max(0, width - str.length)

@@ -1,4 +1,7 @@
-package com.wapitia.worddivision.app
+package worddivision.app
+
+import worddivision.model.Tableau
+import kotlin.test.Test
 
 /*
  *                   G O
@@ -17,7 +20,18 @@ package com.wapitia.worddivision.app
 
 internal class SubcellTest {
 
+    @Test
     fun buildEx1() {
-
+        val tableau = Tableau.builder()
+            .quotient("   GO")
+            .divisor("YEW")
+            .row("LIGHT")
+            .row("LYNO")
+            .row(" ENIT")
+            .row(" HIIH")
+            .row("  LGG")
+            .build()
+        val str = tableau.toString()
+        System.out.println(str)
     }
 }

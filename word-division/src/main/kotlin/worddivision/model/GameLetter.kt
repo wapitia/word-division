@@ -1,6 +1,7 @@
-package com.wapitia.worddivision.model
+package worddivision.model
 
 class GameLetter(val char: Char) : Letter {
+
     var solvedDigit: Digit? = null
 
     override fun char() = char

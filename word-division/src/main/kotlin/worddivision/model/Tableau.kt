@@ -1,25 +1,9 @@
-package com.wapitia.worddivision.model
+package worddivision.model
 
-import com.wapitia.worddivision.model.render.TableauRenderer
+import worddivision.model.builder.TextTableauBuilder
+import worddivision.model.render.TableauRenderer
 
-/*
- *                   G O
- *           ┌───────────
- *     Y E W │ L I G H T
- *             L Y N O
- *             ───────
- *               E N I T
- *               H I I H
- *               ────────
- *                 L G G
- *
- * Is generated as Tableau:
- *
- * Tableau: {
- *   width: 5,
- *
- * }
- */
+
 // tableau width is the number of
 
 /**In a Word Division problem, the com.wapitia.worddivision.model.Subcell or Subtraction cell is a
@@ -48,7 +32,7 @@ import com.wapitia.worddivision.model.render.TableauRenderer
  * <p>
  * In general the entire subcell is modeled with the following components:
  * <pre>
- *     cXb
+ *    b X c
  *      Y
  *     ───
  *      Z
@@ -63,7 +47,7 @@ import com.wapitia.worddivision.model.render.TableauRenderer
  *
  * Captures the subcell equation:
  * <pre>
- *     10c + X - b - Y - Z = 0           Equation 1
+ *     10b + X - c - Y - Z = 0           Equation 1
  * </pre>
  * where:
  * X,Y,Z are decimal digits in the range 0 .. 9 inclusive.
@@ -72,11 +56,11 @@ import com.wapitia.worddivision.model.render.TableauRenderer
  * In the puzzle, Equation 1 is always true, which reduces the possibilities and helps in the solution.
  * We can reduce, or partially reduce, any variable in terms of the others with respect to Equation 1.
  * <PRE>
- *     X = Y + Z + b - 10c
- *     Y = X - Z - b + 10c
- *     Z = X - Y - b + 10c
- *     b = X - Y - Z + 10c
- *     c = - X + Y + Z + b  == 0 ? 0
+ *     X = Y + Z + c - 10b
+ *     Y = X - Z - c + 10b
+ *     Z = X - Y - c + 10b
+ *     c = X - Y - Z + 10b
+ *     b = - X + Y + Z + c  == 0 ? 0
  *                          == 10 ? 1
  * </PRE>
  */
@@ -94,17 +78,27 @@ class Subcell(val x: Cell, val y: Cell, val z: Cell, val c: Carry, val b: Carry)
  *     @ENIT            @@LGG
  * </PRE>
  */
-data class SubtractionStep(val subcells: Array<Subcell>)
+data class SubtractionStep(val subcells: Array<Subcell>) {
+    fun xCells(): Array<Cell> = xyzCells { c -> c.x }
+    fun yCells(): Array<Cell> = xyzCells { c -> c.y }
+    fun zCells(): Array<Cell> = xyzCells { c -> c.z }
+
+    private fun xyzCells( cf: (Subcell) -> Cell ): Array<Cell> = subcells.map(cf).toTypedArray()
+}
 
 data class Tableau(
         val letters: Array<Letter>,
         val width: Int,
-        val dividend:  Array<Cell>,
-        val divisor:  Array<Cell>,
-        val quotient:  Array<Cell>,
+        val dividend: Array<Cell>,
+        val divisor: Array<Cell>,
+        val quotient: Array<Cell>,
         val subtractionSteps: Array<SubtractionStep>)
 {
     override fun toString(): String = TableauRenderer.toString(this)
+
+    companion object Builder {
+        fun builder() = TextTableauBuilder()
+    }
 }
 
 
