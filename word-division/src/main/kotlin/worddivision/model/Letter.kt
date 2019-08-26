@@ -1,6 +1,4 @@
-package com.wapitia.worddivision.model
-
-val BLANK: Char = ' '
+package worddivision.model
 
 /**
  * A common letter of the puzzle whose instance
