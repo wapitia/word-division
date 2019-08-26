@@ -1,171 +1,99 @@
 package worddivision.model.builder
 
 import worddivision.model.Letter
-import worddivision.model.Digit
 import worddivision.model.Cell
 import worddivision.model.SubtractionStep
-import worddivision.model.Subcell
+import worddivision.model.Subrow
 import worddivision.model.Tableau
-import worddivision.model.Carry
 import worddivision.model.BlankCell
-import worddivision.standard.StandardTextUtility.BLANK
+import worddivision.standard.StandardTextUtility.isBlank
 import worddivision.standard.StandardTextUtility.spaces
+import worddivision.standard.StandardCollectionUtility.mapFetch
 
-open class MutableLetter(val char: Char): Letter {
-    var solution: Digit? = null
-    override fun char() = char
-    override fun solution(): Digit? = solution
-}
-
-object Blank : MutableLetter(BLANK) {
-    override fun solution() = 0
-}
-
-internal class LetterCellAccum(val letterMap: MutableMap<Char,Letter> = HashMap<Char,Letter>(),
-                      val cellMap: MutableMap<Letter,Cell> = HashMap<Letter,Cell>() )
-{
-    fun letters(): Array<Letter> = cellMap.keys.toTypedArray().apply { sortBy { ltr -> ltr.char() } }
-
-    fun fetchLetter(c: Char): Letter = letterMap.get(c).run {
-        if (this == null) {
-            val res = MutableLetter(c)
-            letterMap.put(c, res)
-            res
-        }
-        else this
-    }
-
-    fun fetchCell(letter: Letter): Cell = cellMap.get(letter).run {
-        if (this == null) {
-            val res = Cell.letterCell(letter)
-            cellMap.put(letter, res)
-            res
-        }
-        else this
-    }
-
-    fun fetchCellFromChar(c: Char): Cell = fetchCell(fetchLetter(c))
-}
-
-
-/**
- * Build a valid immutable Tableau.
- * data class Tableau(
-        val letters: Array<Letter>,
-        val width: Int,
-        val dividend:  Array<Cell>,
-        val divisor:  Array<Cell>,
-        val quotient:  Array<Cell>,
-        val subtractionSteps: Array<SubtractionStep>)
- */
 class TextTableauBuilder(
-//    var width: Int? = null,
     var quotient: String? = null,
     var divisor: String? = null,
     val rows: MutableList<String> = ArrayList()
 ) {
-//    fun width(width: Int) = apply { this.width = width }
     fun quotient(quotient: String) = apply { this.quotient = quotient }
     fun divisor(divisor: String) = apply { this.divisor = divisor }
-    fun row(row: String) = apply {
-        rows.add(row)
-    }
+    fun row(row: String) = apply { rows.add(row) }
 
-    fun build(): Tableau = validateAndBuild()
+    fun build(): Tableau {
+        val accum = LetterCellAccum()
 
-    protected fun validateAndBuild(): Tableau {
+        var quotientStr = quotient ?: throw TableauBuildException(TableauBuildProblem.MissingQuotient, "Missing quotient")
+        var divisorStr = divisor ?: throw TableauBuildException(TableauBuildProblem.MissingDivisor, "Missing divisor")
+        val dividendStr: String = rows.getOrNull(0) ?: throw TableauBuildException(TableauBuildProblem.MissingDividend, "Missing dividend (row 0)")
+        val width = dividendStr.length;
+        if (width < 1) throw TableauBuildException(TableauBuildProblem.MissingDividend, "Missing dividend (row 0)")
 
-        val accum: LetterCellAccum = LetterCellAccum()
-
-        // width of dividend string sets the overall width of tableau
-        val dividendStr: String = rows.getOrNull(0) ?: ""
-        val width: Int = dividendStr.length;
-        if (width < 1)
-            throw TableauBuildException(TableauBuildProblem.MissingDividend, "Missing dividend (row 0)")
-
-        val dividend: Array<Cell> = cellArrayOf(dividendStr, width, accum)
-        val divsr: Array<Cell> = cellArrayOf(
-            divisor
-                ?: throw TableauBuildException(TableauBuildProblem.MissingDivisor, "Missing divisor"),
-            divisor?.length ?: 0, accum)
-        val quotnt: Array<Cell> = cellArrayOf(
-            quotient
-                ?: throw TableauBuildException(TableauBuildProblem.MissingQuotient, "Missing quotient"),
-            width, accum)
+        val dividendSubrow = buildSubrow(dividendStr, width, accum)
+        val divisorSubrow = buildSubrow(divisorStr, divisorStr.length, accum)
+        val quotientSubrow = buildSubrow(quotientStr, width, accum)
         val subtractionSteps: Array<SubtractionStep> = buildSubSteps(rows, width, accum)
-        val letters: Array<Letter> = accum.letters()
-        return Tableau(letters, width, dividend, divsr, quotnt, subtractionSteps)
+        return Tableau(accum.letters(), width, dividendSubrow, divisorSubrow, quotientSubrow, subtractionSteps)
     }
-
-    fun hasOddSize(list: List<Any>) = list.size % 2 == 1
-
-    fun rowHasSubStepAt(mindex: Int, list: List<Any>) = mindex + 2 < list.size
 
     private fun buildSubSteps(rows: List<String>, width: Int, accum: LetterCellAccum): Array<SubtractionStep> {
 
-        val MinuendIX = 0
-        val SubtrahendIX = 1
-        val DifferenceIX = 2
+        // helper functions
+        fun areOddRows() = rows.size % 2 == 1
 
-        fun normalize(minuend: String): String = when {
-            minuend.length > width -> throw TableauBuildException(TableauBuildProblem.RowTooLong, "Row too long. ")
-            minuend.length < width -> minuend + spaces(width - minuend.length)
-            else                   -> minuend
+        fun isSubStepAt(mindex: Int) = mindex + 2 < rows.size
+
+        fun normalize(rowStr: String): String = when {
+            rowStr.length > width -> throw TableauBuildException(TableauBuildProblem.RowTooLong, "Row too long. ")
+            rowStr.length < width -> rowStr + spaces(width - rowStr.length)
+            else                  -> rowStr
         }
 
-        if (! hasOddSize(rows))
+        fun subrowOf(rowIx: Int): Subrow {
+            val str = rows.get(rowIx).run { normalize(this) }
+            val subrow = buildSubrow(str, width, accum)
+            return subrow
+        }
+
+        // build algorithm
+        if (! areOddRows())
             throw TableauBuildException(TableauBuildProblem.MissingRemainderRow, "Expected a remainder row")
-
-        val stepList: MutableList<SubtractionStep> = mutableListOf<SubtractionStep>()
+        val stepList = mutableListOf<SubtractionStep>()
         var ix = 0
-        while ( rowHasSubStepAt(ix, rows)) {
-
-            val minuendStr = rows.get(ix + MinuendIX).run { normalize(this) }
-            val minuend = cellArrayOf(minuendStr, width, accum)
-
-            val subtrahendStr = rows.get(ix + SubtrahendIX).run { normalize(this) }
-            val subtrahend = cellArrayOf(subtrahendStr, width, accum)
-
-            val differenceStr = rows.get(ix + DifferenceIX).run { normalize(this) }
-            val difference = cellArrayOf(differenceStr, width, accum)
-
-            val step: SubtractionStep = buildStep(minuend, subtrahend, difference)
+        while (isSubStepAt(ix)) {
+            val step: SubtractionStep = SubtractionStep.builder()
+                .minuend(subrowOf(ix))
+                .subtrahend(subrowOf(ix + 1))
+                .difference(subrowOf(ix + 2))
+                .build()
             stepList.add(step)
 
             ix += 2  // difference of this row overlaps minuend of previous row
         }
-        val result: Array<SubtractionStep> = stepList.toTypedArray()
-        return result
+        return stepList.toTypedArray()
     }
 
-    private fun buildStep(minuend: Array<Cell>, subtrahend: Array<Cell>, difference: Array<Cell>): SubtractionStep {
-        val width = minuend.size
-        val subcells: Array<Subcell> = (0 until width).map { i ->
-            val mCell = minuend[i]
-            val sCell = subtrahend[i]
-            val dCell = difference[i]
-            val cell = Subcell(mCell, sCell, dCell, Carry.lowered(), Carry.lowered())
-            cell
-        }.toTypedArray()
-        return SubtractionStep(subcells)
-    }
-
-    private fun cellArrayOf(str: String, width: Int, accum: LetterCellAccum)
-    : Array<Cell>
-    {
+    private fun buildSubrow(str: String, width: Int, accum: LetterCellAccum): Subrow {
         val blankPrefix = kotlin.math.max(0, width - str.length)
         val result: Array<Cell> = Array<Cell>(width) { i ->
             if (i < blankPrefix)
                 BlankCell
             else {
-                val strIx = i - blankPrefix
-                val c: Char = str.get(strIx)
-                val cell: Cell = accum.fetchCellFromChar(c)
+                val c: Char = str.get(i - blankPrefix)
+                val cell = accum.fetchCellFromChar(c)
                 cell
             }
         }
-        return result
+        return Subrow(result)
     }
+}
+
+internal class LetterCellAccum(val letterMap: MutableMap<Char,Letter> = HashMap<Char,Letter>(),
+                               val cellMap: MutableMap<Letter,Cell> = HashMap<Letter,Cell>() )
+{
+    fun letters(): Array<Letter> = cellMap.keys.filter{ ltr -> ! isBlank(ltr.char())}.toTypedArray().apply { sortBy { ltr -> ltr.char() } }
+    fun fetchLetter(c: Char): Letter = mapFetch<Char,Letter>(letterMap, c) { _ -> MutableLetter(c) }
+    fun fetchCell(letter: Letter): Cell = mapFetch<Letter,Cell>(cellMap, letter) { _ -> Cell.letterCell(letter) }
+    fun fetchCellFromChar(c: Char): Cell = fetchCell(fetchLetter(c))
 }
 
 enum class TableauBuildProblem {
@@ -176,7 +104,4 @@ enum class TableauBuildProblem {
     RowTooLong
 }
 
-class TableauBuildException(
-        val buildProblem: TableauBuildProblem,
-        message: String
-): Exception(message)
+class TableauBuildException(val buildProblem: TableauBuildProblem, message: String): Exception(message)

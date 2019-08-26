@@ -2,6 +2,8 @@ package worddivision.model.render
 
 import worddivision.model.Cell
 import worddivision.model.Tableau
+import worddivision.model.Subrow
+import worddivision.standard.StandardCollectionUtility
 import worddivision.standard.StandardTextUtility.spaces
 import worddivision.standard.StandardTextUtility.repeats
 import worddivision.standard.StandardTextUtility.BLANK
@@ -9,11 +11,13 @@ import worddivision.standard.StandardTextUtility.LF
 
 object TableauRenderer {
 
-    fun toString(tableau: Tableau): String = writeTableau(tableau, StringBuilder(), DefaultMetrics).toString()
+    data class PrintMetrics (
+        val cellGap: Int =1,
+        val showCandiatesTop: Boolean = false)
 
-    data class WriteMetrics(val cellGap: Int, val showCandiatesTop: Boolean)
+    fun toString(tableau: Tableau, metrics: PrintMetrics = PrintMetrics(showCandiatesTop = true)): String =
+        writeTableau(tableau, StringBuilder(), metrics).toString()
 
-    val DefaultMetrics = WriteMetrics(cellGap = 1, showCandiatesTop = true)
 
     /**
      * Write the tableau close to the layout
@@ -28,46 +32,47 @@ object TableauRenderer {
      *               ───────
      *                 L G G
      * </pre>
-     * <i>Caption: Figure 1</i>
-      *
+     * <i>Figure 1</i>
+     *
      */
-    fun writeTableau(tableau: Tableau, out: StringBuilder, metx: WriteMetrics): StringBuilder {
+    fun writeTableau(tableau: Tableau, out: StringBuilder, metrics: PrintMetrics): StringBuilder {
 
         val MarginWidth = 3   // margin between divisor and the rest of the tableau.
         // dividend/divisor/quotient widths are the text width including the gap, and defines the overall matrix size
-        val dividendWidth = textWidth(tableau.width, metx.cellGap)
-        val quotientWidth = textWidth(tableau.quotient.size, metx.cellGap)
-        val divisorWidth = textWidth(tableau.divisor.size, metx.cellGap)
+        val dividendWidth = textWidth(tableau.width, metrics.cellGap)
+        val quotientWidth = textWidth(tableau.quotient.size, metrics.cellGap)
+        val divisorWidth = textWidth(tableau.divisor.size, metrics.cellGap)
 
         // space prefixes
         val divisorMargin = spaces(divisorWidth)
         val marginPrefix = spaces(MarginWidth)
-        val quotientPrefix = spaces(dividendWidth - quotientWidth )
+        val quotientPrefix = spaces(dividendWidth - quotientWidth)
 
         // display candidate letters at top
-        if (metx.showCandiatesTop) {
+        if (metrics.showCandiatesTop) {
             out.append("CANDIDATES:").append(LF)
             tableau.letters.forEach { ltr ->
                 out.append(ltr.char())
-                out.append("  ")
+                out.append(" ")
             }
             out.append(LF)
             out.append(LF)
         }
 
         // output quotient line
-        out.append(divisorMargin).append(marginPrefix).append(quotientPrefix).append(cellArraytoText(tableau.quotient, metx.cellGap))
+        out.append(divisorMargin).append(marginPrefix).append(quotientPrefix)
+            .append(cellArraytoText(tableau.quotient, metrics.cellGap))
             .append(LF)
 
         // output horizontal separator line
-        out.append(divisorMargin).append(" ┌").append(repeats('─',dividendWidth + 1))
+        out.append(divisorMargin).append(" ┌").append(repeats('─', dividendWidth + 1))
             .append(LF)
 
         // get the divident from the x-row of the first subtraction step
         val dividend = tableau.subtractionSteps.get(0).xCells()
         // output divisor / dividend line
-        out.append(cellArraytoText(tableau.divisor, metx.cellGap)).append(" │ ")
-            .append(cellArraytoText(dividend, metx.cellGap))
+        out.append(cellArraytoText(tableau.divisor, metrics.cellGap)).append(" │ ")
+            .append(cellArraytoText(dividend, metrics.cellGap))
             .append(LF)
 
         // print the y and z rows of each subtraction step. Only the first x row is printed, which is the divident
@@ -76,38 +81,37 @@ object TableauRenderer {
             // output y line
             val yCells = subtractionStep.yCells()
             out.append(divisorMargin).append("   ")
-                .append(cellArraytoText(yCells, metx.cellGap))
+                .append(cellArraytoText(yCells, metrics.cellGap))
                 .append(LF)
 
             // compute the pre and post blanks of the z Cells, and whether they're all blank
             var countYPreBlanks = 0
             var countYPostBlanks = 0
             var isYAllBlank = true
-            for (cell in yCells) {
+            for (cell in yCells.cells) {
                 var cellIsBlank = cell.char() == BLANK
                 if (cellIsBlank) {
                     if (isYAllBlank) ++countYPreBlanks
                     ++countYPostBlanks
-                }
-                else {
+                } else {
                     isYAllBlank = false
                     countYPostBlanks = 0
                 }
             }
-            if ( ! isYAllBlank) {
+            if (!isYAllBlank) {
                 val zCells = subtractionStep.zCells()
-                val preWid = prefixWidth(countYPreBlanks, metx.cellGap)
+                val preWid = prefixWidth(countYPreBlanks, metrics.cellGap)
                 val textSize = zCells.size - countYPreBlanks - countYPostBlanks
-                val wid = textWidth(textSize, metx.cellGap)
-                val postWid = 0    // textWidth(countZPostBlanks, metx.cellGap)
+                val wid = textWidth(textSize, metrics.cellGap)
+                val postWid = 0    // textWidth(countZPostBlanks, metrics.cellGap)
                 out.append(divisorMargin).append("   ")
                     .append(spaces(preWid))
-                    .append(repeats('─',wid))
+                    .append(repeats('─', wid))
                     .append(spaces(postWid))
                     .append(LF)
                 // output z line
                 out.append(divisorMargin).append("   ")
-                    .append(cellArraytoText(zCells, metx.cellGap))
+                    .append(cellArraytoText(zCells, metrics.cellGap))
                     .append(LF)
             }
         }
@@ -118,26 +122,13 @@ object TableauRenderer {
 
     fun prefixWidth(width: Int, gap: Int): Int = width * (gap + 1)
 
-    fun cellArraytoText(numb: Array<Cell>, cellGap: Int): String {
+    fun cellArraytoText(numb: Subrow, cellGap: Int): String {
         val bldr = StringBuilder()
-        val iterator: Iterator<Cell> = numb.iterator()
-        if (iterator.hasNext()) {
-            val cell = iterator.next()
-            bldr.append(cell.char())
-            toTextR(iterator, bldr, cellGap)
-        }
+        StandardCollectionUtility.interleave<Cell>(numb.cells,
+            { _, cell -> bldr.append(cell.char()) },
+            { _, _, _ -> (0 until cellGap).forEach { _ -> bldr.append(BLANK) } });
         return bldr.toString()
     }
-
-    private fun toTextR(iterator: Iterator<Cell>, bldr: StringBuilder, cellGap: Int) {
-        if (iterator.hasNext()) {
-            (0 until cellGap).forEach { _ -> bldr.append(BLANK) }
-            val cell = iterator.next()
-            bldr.append(cell.char())
-            toTextR(iterator, bldr, cellGap)
-        }
-    }
-
 }
 
 class TableauRenderException(message: String) : Exception(message)

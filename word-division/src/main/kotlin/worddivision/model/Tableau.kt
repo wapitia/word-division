@@ -1,6 +1,8 @@
 package worddivision.model
 
 import worddivision.model.builder.TextTableauBuilder
+import worddivision.model.builder.SubtractionStepBuilder
+
 import worddivision.model.render.TableauRenderer
 
 
@@ -67,6 +69,11 @@ import worddivision.model.render.TableauRenderer
 
 class Subcell(val x: Cell, val y: Cell, val z: Cell, val c: Carry, val b: Carry)
 
+class Subrow(val cells: Array<Cell>) {
+    val size = cells.size
+    operator fun get(ix: Int) = cells[ix]
+}
+
 /**
  * For the Tableau structure, all SubtractionSteps are padded out to $width of the dividend for output alignment
  * purposes,but otherwise has no function.
@@ -79,19 +86,23 @@ class Subcell(val x: Cell, val y: Cell, val z: Cell, val c: Carry, val b: Carry)
  * </PRE>
  */
 data class SubtractionStep(val subcells: Array<Subcell>) {
-    fun xCells(): Array<Cell> = xyzCells { c -> c.x }
-    fun yCells(): Array<Cell> = xyzCells { c -> c.y }
-    fun zCells(): Array<Cell> = xyzCells { c -> c.z }
+    fun xCells() = xyzCells { c -> c.x }
+    fun yCells() = xyzCells { c -> c.y }
+    fun zCells() = xyzCells { c -> c.z }
 
-    private fun xyzCells( cf: (Subcell) -> Cell ): Array<Cell> = subcells.map(cf).toTypedArray()
+    private fun xyzCells( cf: (Subcell) -> Cell ) = Subrow(subcells.map(cf).toTypedArray())
+
+    companion object Builder {
+        fun builder() = SubtractionStepBuilder()
+    }
 }
 
 data class Tableau(
         val letters: Array<Letter>,
         val width: Int,
-        val dividend: Array<Cell>,
-        val divisor: Array<Cell>,
-        val quotient: Array<Cell>,
+        val dividend: Subrow,
+        val divisor: Subrow,
+        val quotient: Subrow,
         val subtractionSteps: Array<SubtractionStep>)
 {
     override fun toString(): String = TableauRenderer.toString(this)
