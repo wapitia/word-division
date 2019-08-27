@@ -1,17 +1,17 @@
 package worddivision.model.builder
 
 import worddivision.model.Subcell
-import worddivision.model.Subrow
+import worddivision.model.CellRow
 import worddivision.model.SubtractionStep
 
 class SubtractionStepBuilder(
-    var minuend: Subrow? = null,
-    var subtrahend: Subrow? = null,
-    var difference: Subrow? = null)
+    var minuend: CellRow? = null,
+    var subtrahend: CellRow? = null,
+    var difference: CellRow? = null)
 {
-    fun minuend(minuend: Subrow) = apply { this.minuend = minuend }
-    fun subtrahend(subtrahend: Subrow) = apply { this.subtrahend = subtrahend }
-    fun difference(difference: Subrow) = apply { this.difference = difference }
+    fun minuend(minuend: CellRow) = apply { this.minuend = minuend }
+    fun subtrahend(subtrahend: CellRow) = apply { this.subtrahend = subtrahend }
+    fun difference(difference: CellRow) = apply { this.difference = difference }
 
     fun build(): SubtractionStep {
         val m = minuend ?: throw SubtractionStepBuildException("Missing minuend")
@@ -25,7 +25,8 @@ class SubtractionStepBuilder(
                 curCarry = nextCarry
                 cell
             }
-            .toTypedArray()
+            .asSequence()
+            .toList()
         return SubtractionStep(subcells)
     }
 }

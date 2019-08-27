@@ -2,7 +2,7 @@ package worddivision.model.render
 
 import worddivision.model.Cell
 import worddivision.model.Tableau
-import worddivision.model.Subrow
+import worddivision.model.CellRow
 import worddivision.standard.StandardCollectionUtility
 import worddivision.standard.StandardTextUtility.spaces
 import worddivision.standard.StandardTextUtility.repeats
@@ -24,8 +24,8 @@ object TableauRenderer {
      * <pre>
      *                   G O
      *           ┌───────────
-     *     Y E W │ L I G H T
-     *             L Y N O
+     *     M E W │ L I G H T
+     *             L M N O
      *             ───────
      *               E N I T
      *               H I I H
@@ -68,40 +68,26 @@ object TableauRenderer {
         out.append(divisorMargin).append(" ┌").append(repeats('─', dividendWidth + 1))
             .append(LF)
 
-        // get the divident from the x-row of the first subtraction step
-        val dividend = tableau.subtractionSteps.get(0).xCells()
+        // get the divident from the s-row of the first subtraction step
+        val dividend = tableau.subtractionSteps.get(0).subtrahendRow()
         // output divisor / dividend line
         out.append(cellArraytoText(tableau.divisor, metrics.cellGap)).append(" │ ")
             .append(cellArraytoText(dividend, metrics.cellGap))
             .append(LF)
 
-        // print the y and z rows of each subtraction step. Only the first x row is printed, which is the divident
-        // in subsequent steps, the z overlaps the next x row, so no more x rows
+        // print the m and d rows of each subtraction step. Only the first s row is printed, which is the divident
+        // in subsequent steps, the d overlaps the next s row, so no more s rows
         for (subtractionStep in tableau.subtractionSteps) {
-            // output y line
-            val yCells = subtractionStep.yCells()
+            // output minuend line
+            val minuendRow = subtractionStep.minuendRow()
             out.append(divisorMargin).append("   ")
-                .append(cellArraytoText(yCells, metrics.cellGap))
+                .append(cellArraytoText(minuendRow, metrics.cellGap))
                 .append(LF)
-
-            // compute the pre and post blanks of the z Cells, and whether they're all blank
-            var countYPreBlanks = 0
-            var countYPostBlanks = 0
-            var isYAllBlank = true
-            for (cell in yCells.cells) {
-                var cellIsBlank = cell.char() == BLANK
-                if (cellIsBlank) {
-                    if (isYAllBlank) ++countYPreBlanks
-                    ++countYPostBlanks
-                } else {
-                    isYAllBlank = false
-                    countYPostBlanks = 0
-                }
-            }
-            if (!isYAllBlank) {
-                val zCells = subtractionStep.zCells()
-                val preWid = prefixWidth(countYPreBlanks, metrics.cellGap)
-                val textSize = zCells.size - countYPreBlanks - countYPostBlanks
+            // output remaining rows only if there is stuff in them
+            if (minuendRow.preblanks < minuendRow.size) {
+                val differenceRow = subtractionStep.differenceRow()
+                val preWid = prefixWidth(minuendRow.preblanks, metrics.cellGap)
+                val textSize = differenceRow.size - minuendRow.preblanks - minuendRow.postblanks
                 val wid = textWidth(textSize, metrics.cellGap)
                 val postWid = 0    // textWidth(countZPostBlanks, metrics.cellGap)
                 out.append(divisorMargin).append("   ")
@@ -109,9 +95,9 @@ object TableauRenderer {
                     .append(repeats('─', wid))
                     .append(spaces(postWid))
                     .append(LF)
-                // output z line
+                // output d line
                 out.append(divisorMargin).append("   ")
-                    .append(cellArraytoText(zCells, metrics.cellGap))
+                    .append(cellArraytoText(differenceRow, metrics.cellGap))
                     .append(LF)
             }
         }
@@ -122,11 +108,12 @@ object TableauRenderer {
 
     fun prefixWidth(width: Int, gap: Int): Int = width * (gap + 1)
 
-    fun cellArraytoText(numb: Subrow, cellGap: Int): String {
+    fun cellArraytoText(numb: CellRow, cellGap: Int): String {
         val bldr = StringBuilder()
-        StandardCollectionUtility.interleave<Cell>(numb.cells,
-            { _, cell -> bldr.append(cell.char()) },
-            { _, _, _ -> (0 until cellGap).forEach { _ -> bldr.append(BLANK) } });
+        StandardCollectionUtility.SuperleaveBuilder<Cell>()
+            .onElement { _, cell -> bldr.append(cell.char()) }
+            .onGap { _, _, _ -> (0 until cellGap).forEach { _ -> bldr.append(BLANK) } }
+            .build(numb.cells.asSequence())
         return bldr.toString()
     }
 }

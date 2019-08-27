@@ -5,7 +5,6 @@ import worddivision.model.builder.SubtractionStepBuilder
 
 import worddivision.model.render.TableauRenderer
 
-
 // tableau width is the number of
 
 /**In a Word Division problem, the com.wapitia.worddivision.model.Subcell or Subtraction cell is a
@@ -14,8 +13,8 @@ import worddivision.model.render.TableauRenderer
  * <pre>
  *                   G O
  *           ┌───────────
- *     Y E W │ L I G H T
- *             L Y N O
+ *     M E W │ L I G H T
+ *             L M N O
  *             ───────
  *               E N I T
  *               H I I H
@@ -26,7 +25,7 @@ import worddivision.model.render.TableauRenderer
  * The following are Subtraction cells:
  * <pre>
  *      L  I  G  H  E  N  I  T
- *      L  Y  N  O  H  I  I  H
+ *      L  M  N  O  H  I  I  H
  *      ── ── ── ── ── ── ── ──
  *      0  E  N  I  0  L  G  G
  * </pre>
@@ -34,13 +33,13 @@ import worddivision.model.render.TableauRenderer
  * <p>
  * In general the entire subcell is modeled with the following components:
  * <pre>
- *    b X c
- *      Y
+ *    b S c
+ *      M
  *     ───
- *      Z
+ *      D
  * </pre>
  * Where:
- *  X, Y, Z are placeholders that represent a single letter from the puzzle, which may be a digit
+ *  S, M, D are placeholders that represent a single letter from the puzzle, which may be a digit
  *  in the range 0 through 9 inclusive.
  *  c represents an optional carry digit, which is either 0 or 1.
  *  b represents an optional borrow digit, which is either 0 or 1.
@@ -49,30 +48,23 @@ import worddivision.model.render.TableauRenderer
  *
  * Captures the subcell equation:
  * <pre>
- *     10b + X - c - Y - Z = 0           Equation 1
+ *     10b + S - c - M - D = 0           Equation 1
  * </pre>
  * where:
- * X,Y,Z are decimal digits in the range 0 .. 9 inclusive.
+ * S,M,D are decimal digits in the range 0 .. 9 inclusive.
  * c and b are 0 or 1, indicating whether the carry bit is lowered or isRaised, respectively.
  * <P>
  * In the puzzle, Equation 1 is always true, which reduces the possibilities and helps in the solution.
  * We can reduce, or partially reduce, any variable in terms of the others with respect to Equation 1.
  * <PRE>
- *     X = Y + Z + c - 10b
- *     Y = X - Z - c + 10b
- *     Z = X - Y - c + 10b
- *     c = X - Y - Z + 10b
- *     b = - X + Y + Z + c  == 0 ? 0
+ *     S = M + D + c - 10b
+ *     M = S - D - c + 10b
+ *     D = S - M - c + 10b
+ *     c = S - M - D + 10b
+ *     b = - S + M + D + c  == 0 ? 0
  *                          == 10 ? 1
  * </PRE>
  */
-
-class Subcell(val x: Cell, val y: Cell, val z: Cell, val c: Carry, val b: Carry)
-
-class Subrow(val cells: Array<Cell>) {
-    val size = cells.size
-    operator fun get(ix: Int) = cells[ix]
-}
 
 /**
  * For the Tableau structure, all SubtractionSteps are padded out to $width of the dividend for output alignment
@@ -85,12 +77,12 @@ class Subrow(val cells: Array<Cell>) {
  *     @ENIT            @@LGG
  * </PRE>
  */
-data class SubtractionStep(val subcells: Array<Subcell>) {
-    fun xCells() = xyzCells { c -> c.x }
-    fun yCells() = xyzCells { c -> c.y }
-    fun zCells() = xyzCells { c -> c.z }
+data class SubtractionStep(val subcells: List<Subcell>) {
+    fun subtrahendRow() = cellRowOf(SubractionRole.S)
+    fun minuendRow() = cellRowOf(SubractionRole.M)
+    fun differenceRow() = cellRowOf(SubractionRole.D)
 
-    private fun xyzCells( cf: (Subcell) -> Cell ) = Subrow(subcells.map(cf).toTypedArray())
+    fun cellRowOf(sst: SubractionRole) = CellRow.builder().cells(subcells.map(sst.cellof).asSequence()).build()
 
     companion object Builder {
         fun builder() = SubtractionStepBuilder()
@@ -98,12 +90,12 @@ data class SubtractionStep(val subcells: Array<Subcell>) {
 }
 
 data class Tableau(
-        val letters: Array<Letter>,
-        val width: Int,
-        val dividend: Subrow,
-        val divisor: Subrow,
-        val quotient: Subrow,
-        val subtractionSteps: Array<SubtractionStep>)
+    val letters: Array<Letter>,
+    val width: Int,
+    val dividend: CellRow,
+    val divisor: CellRow,
+    val quotient: CellRow,
+    val subtractionSteps: List<SubtractionStep>)
 {
     override fun toString(): String = TableauRenderer.toString(this)
 
