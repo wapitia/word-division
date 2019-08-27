@@ -6,8 +6,8 @@ import kotlin.test.Test
 /*
  *                   G O
  *           ┌───────────
- *     Y E W │ L I G H T
- *             L Y N O
+ *     M E W │ L I G H T
+ *             L M N O
  *             ───────
  *               E N I T
  *               H I I H

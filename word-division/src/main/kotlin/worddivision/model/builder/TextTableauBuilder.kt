@@ -3,7 +3,7 @@ package worddivision.model.builder
 import worddivision.model.Letter
 import worddivision.model.Cell
 import worddivision.model.SubtractionStep
-import worddivision.model.Subrow
+import worddivision.model.CellRow
 import worddivision.model.Tableau
 import worddivision.model.BlankCell
 import worddivision.standard.StandardTextUtility.isBlank
@@ -13,7 +13,7 @@ import worddivision.standard.StandardCollectionUtility.mapFetch
 class TextTableauBuilder(
     var quotient: String? = null,
     var divisor: String? = null,
-    val rows: MutableList<String> = ArrayList()
+    val rows: MutableList<String> = mutableListOf<String>()
 ) {
     fun quotient(quotient: String) = apply { this.quotient = quotient }
     fun divisor(divisor: String) = apply { this.divisor = divisor }
@@ -31,11 +31,11 @@ class TextTableauBuilder(
         val dividendSubrow = buildSubrow(dividendStr, width, accum)
         val divisorSubrow = buildSubrow(divisorStr, divisorStr.length, accum)
         val quotientSubrow = buildSubrow(quotientStr, width, accum)
-        val subtractionSteps: Array<SubtractionStep> = buildSubSteps(rows, width, accum)
+        val subtractionSteps: List<SubtractionStep> = buildSubSteps(rows, width, accum)
         return Tableau(accum.letters(), width, dividendSubrow, divisorSubrow, quotientSubrow, subtractionSteps)
     }
 
-    private fun buildSubSteps(rows: List<String>, width: Int, accum: LetterCellAccum): Array<SubtractionStep> {
+    private fun buildSubSteps(rows: List<String>, width: Int, accum: LetterCellAccum): List<SubtractionStep> {
 
         // helper functions
         fun areOddRows() = rows.size % 2 == 1
@@ -48,7 +48,7 @@ class TextTableauBuilder(
             else                  -> rowStr
         }
 
-        fun subrowOf(rowIx: Int): Subrow {
+        fun subrowOf(rowIx: Int): CellRow {
             val str = rows.get(rowIx).run { normalize(this) }
             val subrow = buildSubrow(str, width, accum)
             return subrow
@@ -69,12 +69,12 @@ class TextTableauBuilder(
 
             ix += 2  // difference of this row overlaps minuend of previous row
         }
-        return stepList.toTypedArray()
+        return stepList.toList()
     }
 
-    private fun buildSubrow(str: String, width: Int, accum: LetterCellAccum): Subrow {
+    private fun buildSubrow(str: String, width: Int, accum: LetterCellAccum): CellRow {
         val blankPrefix = kotlin.math.max(0, width - str.length)
-        val result: Array<Cell> = Array<Cell>(width) { i ->
+        val result: List<Cell> = List<Cell>(width) { i ->
             if (i < blankPrefix)
                 BlankCell
             else {
@@ -83,7 +83,7 @@ class TextTableauBuilder(
                 cell
             }
         }
-        return Subrow(result)
+        return CellRowBuilder(result.asSequence()).build()
     }
 }
 
