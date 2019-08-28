@@ -1,4 +1,6 @@
-Solves and words Word Division problems, such as the
+# Word Division Application
+
+Application to create and solve Word Division problems, such as the
 Word Arithmetic pages in Dell Crossword puzzles:
 <pre>
                   G O
@@ -11,15 +13,14 @@ Word Arithmetic pages in Dell Crossword puzzles:
               ────────
                 L G G
 </pre>
-<p>
+
 This is a long division puzzle, having ten digits represented
 by ten unique letters, whose solution 0 through 9 spell out a word
 or phrase. The solution involves finding the unique decimal digit
 solution of each letter by using long division techniques.
 
-<H2>Terminology</H2>
+## Terminology
 
-<P>
 <B>Dividend</B> The number that will be divided, "L I G H T" in the example above.
 <P>
 <B>Divisor</B> Divides into the Divident, " M E W" in the example above.

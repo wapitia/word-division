@@ -15,6 +15,10 @@ interface Letter {
      */
     fun char(): Char
 
+    fun hasChar(): Boolean
+
+    fun isBlank() = ! hasChar()
+
     /**
      * The hope of a solution.
      * If solved, returns the solution digit, or null if not solved.

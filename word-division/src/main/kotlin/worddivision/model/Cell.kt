@@ -15,7 +15,7 @@ interface Cell {
 class CellReduction {
     fun reduce(cell: Cell): Cell = when (cell) {
         is LetterCell -> cell.solution()
-                ?. let { it -> DigitCell(it) }
+                ?. let { DigitCell(it) }
                 ?: cell
         is DigitCell -> cell
         else -> cell

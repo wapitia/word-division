@@ -8,7 +8,9 @@ class CellRow(val cells: List<Cell>, val preblanks: Int, val postblanks: Int) {
 
     operator fun get(ix: Int) = cells[ix]
 
-    fun textSize(): Int  = size - preblanks - postblanks
+    fun textSize() = size - preblanks - postblanks
+
+    fun isOccupied() = preblanks < size
 
     companion object Builder {
         fun builder() = CellRowBuilder()

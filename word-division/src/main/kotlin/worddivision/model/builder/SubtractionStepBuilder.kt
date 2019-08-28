@@ -4,6 +4,8 @@ import worddivision.model.Subcell
 import worddivision.model.CellRow
 import worddivision.model.SubtractionStep
 
+import worddivision.model.builder.SubtractionStepBuildException as SSBE
+
 class SubtractionStepBuilder(
     var minuend: CellRow? = null,
     var subtrahend: CellRow? = null,
@@ -14,9 +16,9 @@ class SubtractionStepBuilder(
     fun difference(difference: CellRow) = apply { this.difference = difference }
 
     fun build(): SubtractionStep {
-        val m = minuend ?: throw SubtractionStepBuildException("Missing minuend")
-        val s = subtrahend ?: throw SubtractionStepBuildException("Missing subtrahend")
-        val d = difference ?: throw SubtractionStepBuildException("Missing difference")
+        val m = minuend ?: throw SSBE("Missing minuend")
+        val s = subtrahend ?: throw SSBE("Missing subtrahend")
+        val d = difference ?: throw SSBE("Missing difference")
         var curCarry = MutableCarry(raised = false)
         val subcells = (0 until m.size)
             .map { i ->
@@ -25,8 +27,7 @@ class SubtractionStepBuilder(
                 curCarry = nextCarry
                 cell
             }
-            .asSequence()
-            .toList()
+            .toTypedArray()
         return SubtractionStep(subcells)
     }
 }

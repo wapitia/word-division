@@ -16,7 +16,7 @@ package com.wapitia.worddivision.app
  *
  * <p>
  * This is a long division puzzle, having ten digits represented
- * by ten unique letters, whose solution 0 through 9 spell out a word
+ * by ten unique letterCache, whose solution 0 through 9 spell out a word
  * or phrase. The solution involves finding the unique decimal digit
  * solution of each letter by using long division techniques.
   */

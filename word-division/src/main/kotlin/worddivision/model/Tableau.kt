@@ -22,7 +22,7 @@ import worddivision.model.render.TableauRenderer
  *                 L G G
  * </pre>
  * <i>Figure 1</i>
- * The following are Subtraction cells:
+ * The following are Subtraction cellCache:
  * <pre>
  *      L  I  G  H  E  N  I  T
  *      L  M  N  O  H  I  I  H
@@ -77,30 +77,32 @@ import worddivision.model.render.TableauRenderer
  *     @ENIT            @@LGG
  * </PRE>
  */
-data class SubtractionStep(val subcells: List<Subcell>) {
+class SubtractionStep(val subcells: Array<Subcell>) {
     fun subtrahendRow() = cellRowOf(SubractionRole.S)
     fun minuendRow() = cellRowOf(SubractionRole.M)
     fun differenceRow() = cellRowOf(SubractionRole.D)
 
-    fun cellRowOf(sst: SubractionRole) = CellRow.builder().cells(subcells.map(sst.cellof).asSequence()).build()
+    fun cellRowOf(sst: SubractionRole) = CellRow.builder()
+        .cells(subcells.map(sst.cellof).asSequence())
+        .build()
 
     companion object Builder {
         fun builder() = SubtractionStepBuilder()
     }
 }
 
-data class Tableau(
+class Tableau(
     val letters: Array<Letter>,
     val width: Int,
     val dividend: CellRow,
     val divisor: CellRow,
     val quotient: CellRow,
-    val subtractionSteps: List<SubtractionStep>)
+    val subtractionSteps: Array<SubtractionStep>)
 {
     override fun toString(): String = TableauRenderer.toString(this)
 
     companion object Builder {
-        fun builder() = TextTableauBuilder()
+        fun textBuilder() = TextTableauBuilder()
     }
 }
 

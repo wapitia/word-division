@@ -3,6 +3,7 @@ package worddivision.model.render
 import worddivision.model.Cell
 import worddivision.model.Tableau
 import worddivision.model.CellRow
+import worddivision.model.Letter
 import worddivision.standard.StandardCollectionUtility
 import worddivision.standard.StandardTextUtility.spaces
 import worddivision.standard.StandardTextUtility.repeats
@@ -12,12 +13,21 @@ import worddivision.standard.StandardTextUtility.LF
 object TableauRenderer {
 
     data class PrintMetrics (
-        val cellGap: Int =1,
-        val showCandiatesTop: Boolean = false)
+        val cellGap: Int = 1,
+        val showCandiatesTop: Boolean = false,
+
+        //  strings and characters for framing the tableau
+        val marginQuotientLine: String      = "   ",
+        val marginHorizontalSepLine: String = " ┌─",
+        val horizontalSepChar: Char         = '─',
+        val marginDividendLine: String      = " │ ",
+        val marginMinuendLine: String       = "   ",
+        val marginSubtractLine: String      = "   ",
+        val marginRemainderLine: String     = "   "
+        )
 
     fun toString(tableau: Tableau, metrics: PrintMetrics = PrintMetrics(showCandiatesTop = true)): String =
         writeTableau(tableau, StringBuilder(), metrics).toString()
-
 
     /**
      * Write the tableau close to the layout
@@ -37,7 +47,6 @@ object TableauRenderer {
      */
     fun writeTableau(tableau: Tableau, out: StringBuilder, metrics: PrintMetrics): StringBuilder {
 
-        val MarginWidth = 3   // margin between divisor and the rest of the tableau.
         // dividend/divisor/quotient widths are the text width including the gap, and defines the overall matrix size
         val dividendWidth = textWidth(tableau.width, metrics.cellGap)
         val quotientWidth = textWidth(tableau.quotient.size, metrics.cellGap)
@@ -45,34 +54,37 @@ object TableauRenderer {
 
         // space prefixes
         val divisorMargin = spaces(divisorWidth)
-        val marginPrefix = spaces(MarginWidth)
         val quotientPrefix = spaces(dividendWidth - quotientWidth)
 
-        // display candidate letters at top
+        // display candidate letterCache at top
         if (metrics.showCandiatesTop) {
             out.append("CANDIDATES:").append(LF)
-            tableau.letters.forEach { ltr ->
-                out.append(ltr.char())
-                out.append(" ")
+            tableau.letters
+                .filter(Letter::hasChar)
+                .sortedBy(Letter::char)
+                .forEach { ltr -> out.append(ltr.char()).append(" ")
             }
             out.append(LF)
             out.append(LF)
         }
 
         // output quotient line
-        out.append(divisorMargin).append(marginPrefix).append(quotientPrefix)
+        out.append(divisorMargin)
+            .append(metrics.marginQuotientLine)
+            .append(quotientPrefix)
             .append(cellArraytoText(tableau.quotient, metrics.cellGap))
             .append(LF)
 
         // output horizontal separator line
-        out.append(divisorMargin).append(" ┌").append(repeats('─', dividendWidth + 1))
+        out.append(divisorMargin)
+            .append(metrics.marginHorizontalSepLine)
+            .append(repeats(metrics.horizontalSepChar, dividendWidth))
             .append(LF)
 
-        // get the divident from the s-row of the first subtraction step
-        val dividend = tableau.subtractionSteps.get(0).subtrahendRow()
         // output divisor / dividend line
-        out.append(cellArraytoText(tableau.divisor, metrics.cellGap)).append(" │ ")
-            .append(cellArraytoText(dividend, metrics.cellGap))
+        out.append(cellArraytoText(tableau.divisor, metrics.cellGap))
+            .append(metrics.marginDividendLine)
+            .append(cellArraytoText(tableau.dividend, metrics.cellGap))
             .append(LF)
 
         // print the m and d rows of each subtraction step. Only the first s row is printed, which is the divident
@@ -80,23 +92,25 @@ object TableauRenderer {
         for (subtractionStep in tableau.subtractionSteps) {
             // output minuend line
             val minuendRow = subtractionStep.minuendRow()
-            out.append(divisorMargin).append("   ")
+            out.append(divisorMargin)
+                .append(metrics.marginMinuendLine)
                 .append(cellArraytoText(minuendRow, metrics.cellGap))
                 .append(LF)
+
             // output remaining rows only if there is stuff in them
-            if (minuendRow.preblanks < minuendRow.size) {
+            if (minuendRow.isOccupied()) {
                 val differenceRow = subtractionStep.differenceRow()
                 val preWid = prefixWidth(minuendRow.preblanks, metrics.cellGap)
                 val textSize = differenceRow.size - minuendRow.preblanks - minuendRow.postblanks
                 val wid = textWidth(textSize, metrics.cellGap)
                 val postWid = 0    // textWidth(countZPostBlanks, metrics.cellGap)
-                out.append(divisorMargin).append("   ")
+                out.append(divisorMargin).append(metrics.marginSubtractLine)
                     .append(spaces(preWid))
-                    .append(repeats('─', wid))
+                    .append(repeats(metrics.horizontalSepChar, wid))
                     .append(spaces(postWid))
                     .append(LF)
-                // output d line
-                out.append(divisorMargin).append("   ")
+                // output remainder line
+                out.append(divisorMargin).append(metrics.marginRemainderLine)
                     .append(cellArraytoText(differenceRow, metrics.cellGap))
                     .append(LF)
             }
@@ -104,9 +118,9 @@ object TableauRenderer {
         return out
     }
 
-    fun textWidth(width: Int, gap: Int): Int = width + gap * (width - 1)
+    fun textWidth(width: Int, gap: Int) = width + gap * (width - 1)
 
-    fun prefixWidth(width: Int, gap: Int): Int = width * (gap + 1)
+    fun prefixWidth(width: Int, gap: Int) = width * (gap + 1)
 
     fun cellArraytoText(numb: CellRow, cellGap: Int): String {
         val bldr = StringBuilder()
@@ -117,5 +131,3 @@ object TableauRenderer {
         return bldr.toString()
     }
 }
-
-class TableauRenderException(message: String) : Exception(message)

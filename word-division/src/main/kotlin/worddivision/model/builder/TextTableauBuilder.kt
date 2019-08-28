@@ -6,36 +6,45 @@ import worddivision.model.SubtractionStep
 import worddivision.model.CellRow
 import worddivision.model.Tableau
 import worddivision.model.BlankCell
-import worddivision.standard.StandardTextUtility.isBlank
+import worddivision.standard.BuildCache
 import worddivision.standard.StandardTextUtility.spaces
-import worddivision.standard.StandardCollectionUtility.mapFetch
+
+import worddivision.model.builder.TableauBuildException as TBE
+import worddivision.model.builder.TableauBuildProblem.MissingQuotient
+import worddivision.model.builder.TableauBuildProblem.MissingDividend
+import worddivision.model.builder.TableauBuildProblem.MissingDivisor
+import worddivision.model.builder.TableauBuildProblem.RowTooLong
+import worddivision.model.builder.TableauBuildProblem.MissingRemainderRow
+
+import kotlin.math.max
 
 class TextTableauBuilder(
     var quotient: String? = null,
     var divisor: String? = null,
-    val rows: MutableList<String> = mutableListOf<String>()
+    val rows: MutableList<String> = mutableListOf()
 ) {
     fun quotient(quotient: String) = apply { this.quotient = quotient }
     fun divisor(divisor: String) = apply { this.divisor = divisor }
     fun row(row: String) = apply { rows.add(row) }
 
     fun build(): Tableau {
-        val accum = LetterCellAccum()
+        val accums = Accums()
 
-        var quotientStr = quotient ?: throw TableauBuildException(TableauBuildProblem.MissingQuotient, "Missing quotient")
-        var divisorStr = divisor ?: throw TableauBuildException(TableauBuildProblem.MissingDivisor, "Missing divisor")
-        val dividendStr: String = rows.getOrNull(0) ?: throw TableauBuildException(TableauBuildProblem.MissingDividend, "Missing dividend (row 0)")
-        val width = dividendStr.length;
-        if (width < 1) throw TableauBuildException(TableauBuildProblem.MissingDividend, "Missing dividend (row 0)")
+        var quotientStr = quotient ?: throw TBE(MissingQuotient, "Missing quotient")
+        var divisorStr = divisor ?: throw TBE(MissingDivisor, "Missing divisor")
+        val dividendStr: String = rows.getOrNull(0) ?: throw TBE(MissingDividend, "Missing dividend (row 0)")
+        val width = dividendStr.length
+        if (width < 1) throw TBE(MissingDividend, "Missing dividend (row 0)")
 
-        val dividendSubrow = buildSubrow(dividendStr, width, accum)
-        val divisorSubrow = buildSubrow(divisorStr, divisorStr.length, accum)
-        val quotientSubrow = buildSubrow(quotientStr, width, accum)
-        val subtractionSteps: List<SubtractionStep> = buildSubSteps(rows, width, accum)
-        return Tableau(accum.letters(), width, dividendSubrow, divisorSubrow, quotientSubrow, subtractionSteps)
+        val dividendSubrow = buildSubrow(dividendStr, width, accums)
+        val divisorSubrow = buildSubrow(divisorStr, divisorStr.length, accums)
+        val quotientSubrow = buildSubrow(quotientStr, width, accums)
+        val subtractionSteps: Array<SubtractionStep> = buildSubSteps(rows, width, accums)
+        return Tableau(accums.letters(), width,
+            dividendSubrow, divisorSubrow, quotientSubrow, subtractionSteps)
     }
 
-    private fun buildSubSteps(rows: List<String>, width: Int, accum: LetterCellAccum): List<SubtractionStep> {
+    private fun buildSubSteps(rows: List<String>, width: Int, accum: Accums): Array<SubtractionStep> {
 
         // helper functions
         fun areOddRows() = rows.size % 2 == 1
@@ -43,20 +52,20 @@ class TextTableauBuilder(
         fun isSubStepAt(mindex: Int) = mindex + 2 < rows.size
 
         fun normalize(rowStr: String): String = when {
-            rowStr.length > width -> throw TableauBuildException(TableauBuildProblem.RowTooLong, "Row too long. ")
+            rowStr.length > width -> throw TBE(RowTooLong, "Row too long. ")
             rowStr.length < width -> rowStr + spaces(width - rowStr.length)
             else                  -> rowStr
         }
 
         fun subrowOf(rowIx: Int): CellRow {
-            val str = rows.get(rowIx).run { normalize(this) }
+            val str = rows[rowIx].let { normalize(it) }
             val subrow = buildSubrow(str, width, accum)
             return subrow
         }
 
         // build algorithm
         if (! areOddRows())
-            throw TableauBuildException(TableauBuildProblem.MissingRemainderRow, "Expected a remainder row")
+            throw TBE(MissingRemainderRow, "Expected a remainder row")
         val stepList = mutableListOf<SubtractionStep>()
         var ix = 0
         while (isSubStepAt(ix)) {
@@ -69,31 +78,29 @@ class TextTableauBuilder(
 
             ix += 2  // difference of this row overlaps minuend of previous row
         }
-        return stepList.toList()
+        return stepList.toTypedArray()
     }
 
-    private fun buildSubrow(str: String, width: Int, accum: LetterCellAccum): CellRow {
-        val blankPrefix = kotlin.math.max(0, width - str.length)
-        val result: List<Cell> = List<Cell>(width) { i ->
-            if (i < blankPrefix)
-                BlankCell
-            else {
-                val c: Char = str.get(i - blankPrefix)
-                val cell = accum.fetchCellFromChar(c)
-                cell
-            }
-        }
-        return CellRowBuilder(result.asSequence()).build()
+    private fun buildSubrow(str: String, width: Int, accum: Accums): CellRow {
+        val blankPrefix = max(0, width - str.length)
+        val cells: Sequence<Cell> = List(width) { i ->
+            if (i < blankPrefix) BlankCell
+            else accum.cellOfChar(str[i - blankPrefix])
+        }.asSequence()
+        return CellRowBuilder().cells(cells).build()
     }
 }
 
-internal class LetterCellAccum(val letterMap: MutableMap<Char,Letter> = HashMap<Char,Letter>(),
-                               val cellMap: MutableMap<Letter,Cell> = HashMap<Letter,Cell>() )
-{
-    fun letters(): Array<Letter> = cellMap.keys.filter{ ltr -> ! isBlank(ltr.char())}.toTypedArray().apply { sortBy { ltr -> ltr.char() } }
-    fun fetchLetter(c: Char): Letter = mapFetch<Char,Letter>(letterMap, c) { _ -> MutableLetter(c) }
-    fun fetchCell(letter: Letter): Cell = mapFetch<Letter,Cell>(cellMap, letter) { _ -> Cell.letterCell(letter) }
-    fun fetchCellFromChar(c: Char): Cell = fetchCell(fetchLetter(c))
+internal class Accums {
+    val letterCache: BuildCache<Char, Letter> = BuildCache { c -> MutableLetter(c) }
+    val cellCache: BuildCache<Letter,Cell> = BuildCache { ltr ->  Cell.letterCell(ltr) }
+
+    fun letters(): Array<Letter> = cellCache.cache.keys
+        .filter( Letter::hasChar )
+        .sortedBy( Letter::char )
+        .toTypedArray()
+
+    fun cellOfChar(c: Char) = cellCache[letterCache[c]]
 }
 
 enum class TableauBuildProblem {

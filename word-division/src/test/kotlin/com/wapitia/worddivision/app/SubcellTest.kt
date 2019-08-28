@@ -18,7 +18,7 @@ internal class SubcellTest {
 
     @Test
     fun buildEx1() {
-        val tableau = Tableau.builder()
+        val tableau = Tableau.textBuilder()
             .quotient("   GO")
             .divisor("YEW")
             .row("LIGHT")

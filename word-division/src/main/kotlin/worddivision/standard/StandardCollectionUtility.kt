@@ -17,7 +17,7 @@ object StandardCollectionUtility {
 
     /**
      * Calls consumer functions before, during, and after each element in a sequence, allowing
-     * the user to perform interstitials, such as dashes between letters, whatever.
+     * the user to perform interstitials, such as dashes between letterCache, whatever.
      * <p>
      * onElement is called once for each element in the seq, onGap is called one less times for each element in the seq.
      * If the seq is [A,B,C],
@@ -90,11 +90,11 @@ object StandardCollectionUtility {
     }
 
     /**
-     * Return the value from the map corresponding to the given key.
-     * If not found, create a new value using the producer, and put that in the map instead,
-     * and return the new value, not the old value.
+     * Return the value from the cache corresponding to the given key.
+     * If not found, create a new value using the producer, returning the newly produced value,
+     * and also storing that into the cache for the next fecth call.
      */
-    fun <K,V> mapFetch(map: MutableMap<K,V>, key: K, producer: (K) -> V): V = map[key]
-        ?: producer(key) . apply { map.put(key, this) }
+    fun <K,V> mapFetch(cache: MutableMap<K,V>, key: K, producer: (K) -> V): V =
+        cache[key] ?: producer(key) . also { cache[key] = it }
 
 }
