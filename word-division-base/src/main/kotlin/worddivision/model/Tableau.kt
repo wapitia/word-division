@@ -2,6 +2,7 @@ package worddivision.model
 
 import worddivision.model.builder.TextTableauBuilder
 import worddivision.model.builder.SubtractionStepBuilder
+import worddivision.model.builder.TextTableauBuilder2
 
 import worddivision.model.render.TableauRenderer
 
@@ -77,14 +78,15 @@ import worddivision.model.render.TableauRenderer
  *     @ENIT            @@LGG
  * </PRE>
  */
-class SubtractionStep(val subcells: Array<Subcell>) {
-    fun subtrahendRow() = cellRowOf(SubractionRole.S)
-    fun minuendRow() = cellRowOf(SubractionRole.M)
-    fun differenceRow() = cellRowOf(SubractionRole.D)
+class SubtractionStep(val subcells: Array<SubtractionCell>) {
+    fun subtrahendRow() = cellRowOf(SubtractionRole.SUBTRAHEND)
+    fun minuendRow() = cellRowOf(SubtractionRole.MINUEND)
+    fun differenceRow() = cellRowOf(SubtractionRole.DIFFERENCE)
 
-    fun cellRowOf(sst: SubractionRole) = CellRow.builder()
-        .cells(subcells.map(sst.cellof).asSequence())
-        .build()
+    fun cellRowOf(sst: SubtractionRole):CellRow =
+        CellRow.builder()
+                .cells(SubtractionCell.cellSequenceOf(sst, subcells))
+                .build()
 
     companion object Builder {
         fun builder() = SubtractionStepBuilder()
@@ -103,6 +105,7 @@ class Tableau(
 
     companion object Builder {
         fun textBuilder() = TextTableauBuilder()
+        fun textBuilder2() = TextTableauBuilder2()
     }
 }
 
