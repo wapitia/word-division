@@ -1,4 +1,4 @@
-package worddivision.standard
+package com.wapitia.games.worddivision.standard
 
 object StandardTextUtility {
 

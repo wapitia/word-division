@@ -1,6 +1,6 @@
-package worddivision.solution
+package com.wapitia.games.worddivision.solution
 
-import worddivision.model.Carry
+import com.wapitia.games.worddivision.model.Carry
 
 class MutableCarry
     // primary constructor

@@ -1,6 +1,6 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
-import worddivision.standard.StandardTextUtility
+import com.wapitia.games.worddivision.standard.StandardTextUtility
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.properties.Delegates
 

@@ -45,7 +45,7 @@ Note that each step vertically overlaps other steps, but on the other hand,
 is only a horizontal subslice of the width of the overall dividend .
 
 <P>
-<B>com.wapitia.worddivision.model.Subcell</B> A Subtraction cell focuses on a single vertical column from
+<B>Subcell</B> A Subtraction cell focuses on a single vertical column from
 a Subtraction step, such as:
 <PRE>
         I

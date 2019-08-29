@@ -1,2 +1,2 @@
-package worddivision.generation
+package com.wapitia.games.worddivision.generation
 

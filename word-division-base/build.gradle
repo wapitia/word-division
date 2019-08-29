@@ -28,5 +28,4 @@ compileTestKotlin {
 dokka {
     outputFormat = 'html'
     outputDirectory = "$buildDir/javadoc"
-    testLogging.showStandardStreams = true
 }

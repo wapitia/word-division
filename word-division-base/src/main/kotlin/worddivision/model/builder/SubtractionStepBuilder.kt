@@ -1,11 +1,11 @@
-package worddivision.model.builder
+package com.wapitia.games.worddivision.model.builder
 
-import worddivision.model.SubtractionCell
-import worddivision.model.CellRow
-import worddivision.model.SubtractionStep
-import worddivision.solution.MutableCarry
+import com.wapitia.games.worddivision.model.SubtractionCell
+import com.wapitia.games.worddivision.model.CellRow
+import com.wapitia.games.worddivision.model.SubtractionStep
+import com.wapitia.games.worddivision.solution.MutableCarry
 
-import worddivision.model.builder.SubtractionStepBuildException as SSBE
+import com.wapitia.games.worddivision.model.builder.SubtractionStepBuildException as SSBE
 
 class SubtractionStepBuilder(
     var minuend: CellRow? = null,

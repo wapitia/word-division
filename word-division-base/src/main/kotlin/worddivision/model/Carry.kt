@@ -1,4 +1,4 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
 interface Carry {
     fun isRaised(): Boolean

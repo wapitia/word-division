@@ -1,4 +1,4 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
 interface Cell {
     /** Character of the cell, or space if it isn't letter based */

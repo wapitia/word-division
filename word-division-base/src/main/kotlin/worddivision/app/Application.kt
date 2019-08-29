@@ -1,4 +1,4 @@
-package com.wapitia.worddivision.app
+package com.wapitia.com.wapitia.games.worddivision.app
 
 /**com.wapitia.worddivision.app.Application Solves Word Division problems, such as the
  * Word Arithmetic pages in Dell Crossword puzzles:

@@ -1,4 +1,4 @@
-package worddivision.standard
+package com.wapitia.games.worddivision.standard
 
 /**
  * A mutable simple map for accumulating indexed values hander for textBuilder classes

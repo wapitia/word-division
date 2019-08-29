@@ -1,14 +1,14 @@
-package worddivision.model.render
+package com.wapitia.games.worddivision.model.render
 
-import worddivision.model.Cell
-import worddivision.model.Tableau
-import worddivision.model.CellRow
-import worddivision.model.Letter
-import worddivision.standard.StandardCollectionUtility
-import worddivision.standard.StandardTextUtility.spaces
-import worddivision.standard.StandardTextUtility.repeats
-import worddivision.standard.StandardTextUtility.BLANK
-import worddivision.standard.StandardTextUtility.LF
+import com.wapitia.games.worddivision.model.Cell
+import com.wapitia.games.worddivision.model.Tableau
+import com.wapitia.games.worddivision.model.CellRow
+import com.wapitia.games.worddivision.model.Letter
+import com.wapitia.games.worddivision.standard.StandardCollectionUtility
+import com.wapitia.games.worddivision.standard.StandardTextUtility.spaces
+import com.wapitia.games.worddivision.standard.StandardTextUtility.repeats
+import com.wapitia.games.worddivision.standard.StandardTextUtility.BLANK
+import com.wapitia.games.worddivision.standard.StandardTextUtility.LF
 
 object TableauRenderer {
 

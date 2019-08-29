@@ -1,8 +1,8 @@
-package worddivision.model.builder
+package com.wapitia.games.worddivision.model.builder
 
-import worddivision.model.Cell
-import worddivision.model.CellRow
-import worddivision.standard.StandardTextUtility.BLANK
+import com.wapitia.games.worddivision.model.Cell
+import com.wapitia.games.worddivision.model.CellRow
+import com.wapitia.games.worddivision.standard.StandardTextUtility.BLANK
 
 class CellRowBuilder(seq: Sequence<Cell> = sequenceOf<Cell>()) {
 

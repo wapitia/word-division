@@ -1,4 +1,4 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
 /**
  * For the Word Division Models, digits are in the range 0..9

@@ -1,4 +1,4 @@
-package worddivision.solution
+package com.wapitia.games.worddivision.solution
 
 import org.junit.Assert
 import kotlin.test.Test

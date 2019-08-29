@@ -1,6 +1,6 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
-import worddivision.model.builder.CellRowBuilder
+import com.wapitia.games.worddivision.model.builder.CellRowBuilder
 
 class CellRow(val cells: List<Cell>, val preblanks: Int, val postblanks: Int) {
 

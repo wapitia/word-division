@@ -1,10 +1,9 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
-import worddivision.model.builder.TextTableauBuilder
-import worddivision.model.builder.SubtractionStepBuilder
-import worddivision.model.builder.TextTableauBuilder2
+import com.wapitia.games.worddivision.model.builder.SubtractionStepBuilder
+import com.wapitia.games.worddivision.model.builder.TextTableauBuilder
 
-import worddivision.model.render.TableauRenderer
+import com.wapitia.games.worddivision.model.render.TableauRenderer
 
 // tableau width is the number of
 
@@ -105,7 +104,8 @@ class Tableau(
 
     companion object Builder {
         fun textBuilder() = TextTableauBuilder()
-        fun textBuilder2() = TextTableauBuilder2()
+
+
     }
 }
 

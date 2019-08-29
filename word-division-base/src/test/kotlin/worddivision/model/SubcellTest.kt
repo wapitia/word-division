@@ -1,4 +1,4 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
 import kotlin.test.Test
 
@@ -17,7 +17,7 @@ internal class SubcellTest {
 
     @Test
     fun buildEx1() {
-        val tableau = Tableau.textBuilder2()
+        val tableau = Tableau.textBuilder()
             .quotient("   GO")
             .divisor("YEW")
             .subtraction("LIGHT", "LYNO")

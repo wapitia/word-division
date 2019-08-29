@@ -1,8 +1,8 @@
-package worddivision.solution
+package com.wapitia.games.worddivision.solution
 
-import worddivision.model.FixedLetter
-import worddivision.model.Digit
-import worddivision.model.validate
+import com.wapitia.games.worddivision.model.FixedLetter
+import com.wapitia.games.worddivision.model.Digit
+import com.wapitia.games.worddivision.model.validate
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.properties.Delegates.observable
 

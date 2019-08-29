@@ -1,4 +1,4 @@
-package worddivision.model
+package com.wapitia.games.worddivision.model
 
 import java.lang.RuntimeException
 
