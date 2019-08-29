@@ -14,5 +14,6 @@ class CellRow(val cells: List<Cell>, val preblanks: Int, val postblanks: Int) {
 
     companion object Builder {
         fun builder() = CellRowBuilder()
+        fun build(cells: Sequence<Cell>) = builder().cells(cells).build()
     }
 }

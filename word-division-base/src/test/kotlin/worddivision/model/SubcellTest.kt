@@ -1,6 +1,5 @@
-package worddivision.app
+package worddivision.model
 
-import worddivision.model.Tableau
 import kotlin.test.Test
 
 /*
@@ -18,16 +17,14 @@ internal class SubcellTest {
 
     @Test
     fun buildEx1() {
-        val tableau = Tableau.textBuilder()
+        val tableau = Tableau.textBuilder2()
             .quotient("   GO")
             .divisor("YEW")
-            .row("LIGHT")
-            .row("LYNO")
-            .row(" ENIT")
-            .row(" HIIH")
-            .row("  LGG")
+            .subtraction("LIGHT", "LYNO")
+            .subtraction(" ENIT", " HIIH")
+            .remainder("  LGG")
             .build()
         val str = tableau.toString()
-        System.out.println(str)
+        println(str)
     }
 }

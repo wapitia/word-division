@@ -1,8 +1,9 @@
 package worddivision.model.builder
 
-import worddivision.model.Subcell
+import worddivision.model.SubtractionCell
 import worddivision.model.CellRow
 import worddivision.model.SubtractionStep
+import worddivision.solution.MutableCarry
 
 import worddivision.model.builder.SubtractionStepBuildException as SSBE
 
@@ -23,7 +24,7 @@ class SubtractionStepBuilder(
         val subcells = (0 until m.size)
             .map { i ->
                 val nextCarry = MutableCarry(raised = false)
-                val cell = Subcell(m[i], s[i], d[i], curCarry, nextCarry)
+                val cell = SubtractionCell(m[i], s[i], d[i], curCarry, nextCarry)
                 curCarry = nextCarry
                 cell
             }

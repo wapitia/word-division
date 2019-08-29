@@ -1,5 +1,9 @@
 package worddivision.model
 
+import worddivision.standard.StandardTextUtility
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.properties.Delegates
+
 /**
  * A common letter of the puzzle whose instance
  * is shared by all Cells, so that for example if
@@ -15,7 +19,7 @@ interface Letter {
      */
     fun char(): Char
 
-    fun hasChar(): Boolean
+    fun hasChar() = char() != StandardTextUtility.BLANK
 
     fun isBlank() = ! hasChar()
 
@@ -24,4 +28,14 @@ interface Letter {
      * If solved, returns the solution digit, or null if not solved.
      */
     fun solution(): Digit?
+}
+
+/**
+ * A Letter whose character is fixed
+ */
+open abstract class FixedLetter(val char: Char): Letter {
+
+    override fun char() = char
+
+    override abstract fun solution(): Digit?
 }

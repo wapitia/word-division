@@ -2,7 +2,7 @@ package worddivision.model.builder
 
 import worddivision.model.Cell
 import worddivision.model.CellRow
-import worddivision.standard.StandardTextUtility
+import worddivision.standard.StandardTextUtility.BLANK
 
 class CellRowBuilder(seq: Sequence<Cell> = sequenceOf<Cell>()) {
 
@@ -21,7 +21,7 @@ class CellRowBuilder(seq: Sequence<Cell> = sequenceOf<Cell>()) {
         var postBlanks = 0
         var blankSoFar = true
         for (cell in cells) {
-            var cellIsBlank = cell.char() == StandardTextUtility.BLANK
+            var cellIsBlank = cell.char() == BLANK
             if (cellIsBlank) {
                 if (blankSoFar) ++preBlanks
                 ++postBlanks
