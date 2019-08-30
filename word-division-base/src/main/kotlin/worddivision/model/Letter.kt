@@ -33,7 +33,7 @@ interface Letter {
 /**
  * A Letter whose character is fixed
  */
-open abstract class FixedLetter(val char: Char): Letter {
+abstract class FixedLetter(val char: Char): Letter {
 
     override fun char() = char
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/word-division.iml" filepath="$PROJECT_DIR$/.idea/word-division.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-base.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-base.test.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-base.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-jfx.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-jfx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-jfx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-jfx.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-jfx.test.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-jfx.test.iml" />
+    </modules>
+  </component>
+</project>

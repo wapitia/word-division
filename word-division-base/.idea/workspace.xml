@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="77caeb91-73e3-47dc-987d-05a046a1d984" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/generation/WordDivisionGeneration.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/SubtractionCell.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/solution/MutableCarry.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/solution/SolutionLetter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/worddivision/solution/SolutionLetterTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/app/Application.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/app/Application.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/Carry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/Carry.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/Cell.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/Cell.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/CellRow.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/CellRow.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/Common.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/Common.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/Letter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/Letter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/Subcell.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/Tableau.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/Tableau.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/builder/CellRowBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/builder/CellRowBuilder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/builder/ConcreteModels.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/builder/SubtractionStepBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/builder/SubtractionStepBuilder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/builder/TextTableauBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/builder/TextTableauBuilder.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/model/render/TableauRenderer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/model/render/TableauRenderer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/standard/BuildCache.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/standard/BuildCache.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/standard/StandardCollectionUtility.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/standard/StandardCollectionUtility.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/main/kotlin/worddivision/standard/StandardTextUtility.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/worddivision/standard/StandardTextUtility.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../word-division/src/test/kotlin/com/wapitia/worddivision/app/SubcellTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/worddivision/model/SubcellTest.kt" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="word-division-base" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="word-division-base" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="word-division-base" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="documentation" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1Q0hUEQ0AQloIl7USz0IaAStaaS" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="project.propGUI" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="worddivision.model" />
+      <recent name="worddivision.solution" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Gradle.SubcellTest.buildEx1">
+    <configuration name="SolutionLetterTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;worddivision.solution.SolutionLetterTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="SolutionLetterTest.testSimpleSolutionLetter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;worddivision.solution.SolutionLetterTest.testSimpleSolutionLetter&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="SubcellTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;worddivision.app.SubcellTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="SubcellTest.buildEx1" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;worddivision.model.SubcellTest.buildEx1&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":cleanTest" />
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="buildEx1" type="JUnit" factoryName="JUnit" temporary="true">
+      <module name="word-division-base.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="worddivision.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.wapitia.worddivision.app" />
+      <option name="MAIN_CLASS_NAME" value="worddivision.app.SubcellTest" />
+      <option name="METHOD_NAME" value="buildEx1" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.SubcellTest.buildEx1" />
+        <item itemvalue="Gradle.SolutionLetterTest.testSimpleSolutionLetter" />
+        <item itemvalue="Gradle.SolutionLetterTest" />
+        <item itemvalue="JUnit.buildEx1" />
+        <item itemvalue="Gradle.SubcellTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="77caeb91-73e3-47dc-987d-05a046a1d984" name="Default Changelist" comment="" />
+      <created>1566911942475</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1566911942475</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/worddivision/solution/SolutionLetterTest.kt</url>
+          <line>9</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/worddivision/solution/SolutionLetterTest.kt</url>
+          <line>14</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/worddivision/solution/SolutionLetterTest.kt</url>
+          <line>10</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/worddivision/solution/SolutionLetterTest.kt</url>
+          <line>11</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/worddivision/model/SubcellTest.kt</url>
+          <line>20</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Kotlin</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>2.1.2</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>com.wapitia.games.word-division</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Gradle: junit:junit:4.12</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
