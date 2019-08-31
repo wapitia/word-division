@@ -14,7 +14,7 @@ import com.wapitia.games.worddivision.model.Tableau
 
 class JfxWordDivisionApp : Application() {
 
-     var model : Tableu? = null
+     var model : Tableau? = null
 
     /**
      * A Single-character entry component for Tableau user interaction UI
