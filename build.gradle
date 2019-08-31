@@ -1,0 +1,8 @@
+//sourceCompatibility = 11
+//targetCompatibility = 11
+
+def cl = { task -> println "I'm $task.project.name" }
+
+//createTask('hello', cl)
+//project(':word-division-base').createTask('hello', cl)
+//project(':word-division-jfx').createTask('hello', cl)

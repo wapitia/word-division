@@ -2,6 +2,22 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/657054965/Users.cmorgan.wapitia-git.word-division-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/657054965/Users.cmorgan.wapitia-git.word-division-base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/657054965/Users.cmorgan.wapitia-git.word-division-base.test.iml" filepath="$PROJECT_DIR$/.idea/modules/657054965/Users.cmorgan.wapitia-git.word-division-base.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Users.cmorgan.wapitia-git.word-division-jfx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Users.cmorgan.wapitia-git.word-division-jfx.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Users.cmorgan.wapitia-git.word-division-jfx.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Users.cmorgan.wapitia-git.word-division-jfx.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-base.test.iml" filepath="$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-base.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-jfx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-jfx.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-jfx.test.iml" filepath="$PROJECT_DIR$/.idea/modules/cmorgan.wapitia-git.word-division-jfx.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-base.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-base.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-jfx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-jfx.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-jfx.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.wapitia.games.word-division-jfx.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-base.test.iml" filepath="$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-base.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-jfx.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-jfx.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-jfx.test.iml" filepath="$PROJECT_DIR$/.idea/modules/wapitia-git.word-division-jfx.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/word-division.iml" filepath="$PROJECT_DIR$/.idea/word-division.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-base.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/word-division-base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/word-division-base.main.iml" />

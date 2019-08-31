@@ -1,1 +1,0 @@
-package com.wapitia.games.worddivision.front.jfx;

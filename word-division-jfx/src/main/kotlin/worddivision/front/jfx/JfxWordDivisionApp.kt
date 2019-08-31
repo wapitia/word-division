@@ -10,7 +10,11 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import javafx.stage.Stage
 
+import com.wapitia.games.worddivision.model.Tableau
+
 class JfxWordDivisionApp : Application() {
+
+     var model : Tableu? = null
 
     /**
      * A Single-character entry component for Tableau user interaction UI

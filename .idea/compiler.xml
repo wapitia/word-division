@@ -5,6 +5,22 @@
       <profile default="true" name="Default" enabled="true" />
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="cmorgan.wapitia-git.word-division-base.main" target="11" />
+      <module name="cmorgan.wapitia-git.word-division-base.test" target="11" />
+      <module name="cmorgan.wapitia-git.word-division-jfx.main" target="11" />
+      <module name="cmorgan.wapitia-git.word-division-jfx.test" target="11" />
+      <module name="com.wapitia.games.word-division-base.main" target="11" />
+      <module name="com.wapitia.games.word-division-base.test" target="11" />
+      <module name="com.wapitia.games.word-division-jfx.main" target="11" />
+      <module name="com.wapitia.games.word-division-jfx.test" target="11" />
+      <module name="Users.cmorgan.wapitia-git.word-division-base.main" target="11" />
+      <module name="Users.cmorgan.wapitia-git.word-division-base.test" target="11" />
+      <module name="Users.cmorgan.wapitia-git.word-division-jfx.main" target="11" />
+      <module name="Users.cmorgan.wapitia-git.word-division-jfx.test" target="11" />
+      <module name="wapitia-git.word-division-base.main" target="11" />
+      <module name="wapitia-git.word-division-base.test" target="11" />
+      <module name="wapitia-git.word-division-jfx.main" target="11" />
+      <module name="wapitia-git.word-division-jfx.test" target="11" />
       <module name="word-division-base.main" target="11" />
       <module name="word-division-base.test" target="11" />
       <module name="word-division-jfx.main" target="11" />
